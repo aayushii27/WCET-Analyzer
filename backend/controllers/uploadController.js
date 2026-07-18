@@ -1,25 +1,23 @@
-const uploadController=(req,res)=>{
+const fs = require("fs");
 
-if(!req.file){
+const uploadController = (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      message: "No file uploaded",
+    });
+  }
 
-return res.status(400).json({
+  const content = fs.readFileSync(req.file.path, "utf8");
 
-message:"No file uploaded"
+  global.lastUploadedFile = {
+    filename: req.file.originalname,
+    content: content,
+  };
 
-});
+  res.json({
+    message: "Program Uploaded Successfully",
+    filename: req.file.originalname,
+  });
+};
 
-}
-
-res.json({
-
-message:"File uploaded successfully",
-
-filename:req.file.filename,
-
-original:req.file.originalname
-
-});
-
-}
-
-module.exports=uploadController;
+module.exports = uploadController;
